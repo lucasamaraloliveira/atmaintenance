@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#F5F5F7] text-[#1D1D1F] antialiased transition-colors duration-300;
+  }
+  
+  .dark body {
+    @apply bg-[#1D1D1F] text-[#F5F5F7];
+  }
+}
+
+@layer components {
+  .apple-glass {
+    @apply bg-white/70 backdrop-blur-xl border-white/20;
+  }
+  
+  .dark .apple-glass {
+    @apply bg-[#2C2C2E]/70 border-white/10;
+  }
+  
+  .apple-button {
+    @apply px-4 py-2 rounded-full bg-[#009BDB] text-white font-medium transition-all hover:bg-[#0087BF] active:scale-95 disabled:opacity-50;
+  }
+
+  .apple-button-secondary {
+    @apply px-4 py-2 rounded-full bg-[#E8E8ED] text-[#1D1D1F] font-medium transition-all hover:bg-[#D2D2D7] active:scale-95;
+  }
+  
+  .dark .apple-button-secondary {
+    @apply bg-[#3A3A3C] text-[#F5F5F7] hover:bg-[#48484A];
+  }
+
+  .apple-input {
+    @apply w-full px-4 py-3 rounded-xl bg-white border border-[#D2D2D7] focus:border-[#009BDB] focus:ring-1 focus:ring-[#009BDB] outline-none transition-all;
+  }
+  
+  .dark .apple-input {
+    @apply bg-[#2C2C2E] border-[#48484A] text-[#F5F5F7] focus:border-[#009BDB] focus:ring-[#009BDB];
+  }
+
+  .sidebar-item {
+    @apply px-4 py-3 rounded-lg cursor-pointer transition-all hover:bg-[#E8E8ED];
+  }
+  
+  .dark .sidebar-item {
+    @apply hover:bg-[#3A3A3C];
+  }
+
+  .sidebar-item-active {
+    @apply bg-[#009BDB] text-white hover:bg-[#009BDB];
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D2D2D7;
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #48484A;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #86868B;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #636366;
+}
+
+/* Markdown styling */
+.markdown-body h1 { @apply text-3xl font-bold mb-4 mt-6 text-[#1D1D1F]; }
+.markdown-body h2 { @apply text-2xl font-semibold mb-3 mt-5 text-[#1D1D1F]; }
+.markdown-body h3 { @apply text-xl font-medium mb-2 mt-4 text-[#1D1D1F]; }
+.dark .markdown-body h1, .dark .markdown-body h2, .dark .markdown-body h3 { @apply text-[#F5F5F7]; }
+
+.markdown-body p { @apply mb-4 leading-relaxed text-[#424245]; }
+.dark .markdown-body p { @apply text-[#A1A1A6]; }
+
+.markdown-body ul { @apply list-disc ml-6 mb-4 text-[#424245]; }
+.markdown-body ol { @apply list-decimal ml-6 mb-4 text-[#424245]; }
+.dark .markdown-body ul, .dark .markdown-body ol { @apply text-[#A1A1A6]; }
+
+.markdown-body code { @apply bg-[#E8E8ED] px-1.5 py-0.5 rounded font-mono text-sm text-[#1D1D1F]; }
+.dark .markdown-body code { @apply bg-[#3A3A3C] text-[#F5F5F7]; }
+
+.markdown-body pre { @apply bg-[#1D1D1F] text-white p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm; }
+.dark .markdown-body pre { @apply bg-[#000000] border border-[#3A3A3C]; }
+
+.markdown-body pre code { @apply bg-transparent p-0 text-inherit; }
+.markdown-body blockquote { @apply border-l-4 border-[#009BDB] pl-4 italic text-[#86868B] mb-4; }
+.dark .markdown-body blockquote { @apply border-[#009BDB] text-[#86868B]; }
+
+.markdown-body a { @apply text-[#009BDB] hover:underline; }
+.dark .markdown-body a { @apply text-[#009BDB]; }

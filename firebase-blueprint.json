@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "MaintenanceInstruction": {
+      "title": "Instrução de Manutenção",
+      "description": "Uma instrução de manutenção para um site específico.",
+      "type": "object",
+      "properties": {
+        "siteName": {
+          "type": "string",
+          "description": "Nome do site."
+        },
+        "content": {
+          "type": "string",
+          "description": "Conteúdo em Markdown das instruções."
+        },
+        "authorUid": {
+          "type": "string",
+          "description": "UID do autor (Firebase Auth)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data de criação."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data da última atualização."
+        }
+      },
+      "required": ["siteName", "content", "authorUid", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/instructions/{instructionId}": {
+      "schema": "MaintenanceInstruction",
+      "description": "Coleção de instruções de manutenção."
+    }
+  }
+}

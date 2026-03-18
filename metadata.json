@@ -1,0 +1,5 @@
+{
+  "name": "ATMaintenance - Gestor de Instruções",
+  "description": "Um aplicativo elegante para gerenciar e consultar instruções de manutenção de sites em Markdown, com design inspirado na Apple.",
+  "requestFramePermissions": []
+}
