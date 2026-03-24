@@ -188,13 +188,27 @@
   .border-b,
   .shadow-sm,
   .backdrop-blur-md,
-  .backdrop-blur-xl {
+  .backdrop-blur-xl,
+  .sticky {
     display: none !important;
     height: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
     position: absolute !important;
-    top: -1000px !important;
+    top: -9999px !important;
+    visibility: hidden !important;
+  }
+
+  /* CRITICAL: Reset all containers that might cause clipping */
+  html, body, #__next, div[class*="overflow-hidden"], main {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    position: static !important;
+    display: block !important;
   }
 
   body {
@@ -203,94 +217,89 @@
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
   }
 
   /* Content alignment */
   main {
     padding: 0 !important;
     margin: 0 !important;
-    display: block !important;
   }
 
   .flex-1 {
-    display: block !important;
+    display: block !important; /* Switch from flex to block for printing */
     overflow: visible !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    height: auto !important;
   }
 
   .max-w-4xl {
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 auto !important;
+    border: none !important;
   }
 
   .ProseMirror, .markdown-body {
-    padding: 0 !important;
+    padding: 40px 0 !important; /* Some breathing room at top/bottom of content */
     margin: 0 !important;
     min-height: auto !important;
     width: 100% !important;
+    display: block !important;
   }
 
   /* Grid alignment for high quality */
   h1 { 
     font-size: 28pt !important; 
     margin-top: 0 !important;
-    margin-bottom: 25pt !important; 
+    margin-bottom: 30pt !important; 
     border-bottom: 2pt solid black !important; 
     padding-bottom: 10pt;
     text-align: center !important;
+    page-break-after: avoid;
   }
   
-  h2 { font-size: 20pt !important; margin-top: 30pt !important; margin-bottom: 15pt !important; }
-  h3 { font-size: 16pt !important; margin-top: 25pt !important; margin-bottom: 12pt !important; }
+  h2 { font-size: 20pt !important; margin-top: 30pt !important; margin-bottom: 15pt !important; page-break-after: avoid; }
+  h3 { font-size: 16pt !important; margin-top: 25pt !important; margin-bottom: 12pt !important; page-break-after: avoid; }
 
   p, li, blockquote {
-    font-size: 12pt !important;
+    font-size: 11pt !important;
     line-height: 1.6 !important;
-    color: #111 !important;
+    color: #000 !important;
     text-align: justify !important;
+    orphans: 3;
+    widows: 3;
   }
 
   table {
-    page-break-inside: auto;
+    page-break-inside: auto !important;
     border-collapse: collapse !important;
-    border: 1.5pt solid black !important;
+    border: 1pt solid black !important;
     width: 100% !important;
     margin-bottom: 20pt !important;
     table-layout: auto !important;
   }
 
-  tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
-  }
+  thead { display: table-header-group !important; }
+  tr { page-break-inside: avoid !important; }
 
   th, td {
-    border: 1pt solid #444 !important;
-    padding: 10pt !important;
+    border: 1pt solid #000 !important;
+    padding: 8pt !important;
     word-break: break-word !important;
   }
 
   th {
-    background-color: #f0f0f2 !important;
+    background-color: #eee !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    text-transform: uppercase;
-    font-size: 10pt !important;
-    letter-spacing: 0.05em;
-  }
-
-  .page-break {
-    page-break-after: always;
+    font-weight: bold;
   }
 
   a[href]:after {
     content: " [" attr(href) "]";
     font-size: 9pt;
-    color: #555;
+    color: #333;
   }
 }
