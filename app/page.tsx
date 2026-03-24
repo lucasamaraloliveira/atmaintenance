@@ -70,7 +70,7 @@ export default function Home() {
     try {
       const docRef = await addDoc(collection(db, 'instructions'), {
         siteName: 'Novo Site',
-        content: '# Instruções de Manutenção\n\nDescreva aqui as instruções...',
+        content: '<h1>Instruções de Manutenção</h1><p>Descreva aqui as instruções...</p>',
         authorUid: user.uid,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),

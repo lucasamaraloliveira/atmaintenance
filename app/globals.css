@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @layer base {
   body {
@@ -103,3 +104,55 @@
 
 .markdown-body a { @apply text-[#009BDB] hover:underline; }
 .dark .markdown-body a { @apply text-[#009BDB]; }
+
+/* Tiptap styles */
+.ProseMirror {
+  outline: none;
+  min-height: 500px;
+}
+
+.ProseMirror p {
+  @apply mb-4 leading-relaxed;
+}
+
+.ProseMirror h1 { @apply text-3xl font-bold mb-4 mt-6; }
+.ProseMirror h2 { @apply text-2xl font-semibold mb-3 mt-5; }
+.ProseMirror h3 { @apply text-xl font-medium mb-2 mt-4; }
+
+.ProseMirror ul { @apply list-disc ml-6 mb-4; }
+.ProseMirror ol { @apply list-decimal ml-6 mb-4; }
+
+.ProseMirror blockquote { @apply border-l-4 border-[#009BDB] pl-4 italic text-[#86868B] mb-4; }
+
+.ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  @apply border border-[#D2D2D7] mb-4;
+}
+
+.ProseMirror table td,
+.ProseMirror table th {
+  min-width: 1em;
+  @apply border border-[#D2D2D7] p-2 relative text-left;
+}
+
+.ProseMirror table th {
+  @apply bg-[#F5F5F7] font-bold;
+}
+
+.ProseMirror table .selectedCell:after {
+  z-index: 2;
+  content: "";
+  @apply absolute inset-0 bg-[#009BDB]/10 pointer-events-none;
+}
+
+.ProseMirror table .column-resize-handle {
+  @apply absolute -right-0.5 top-0 bottom-0 w-1 bg-[#009BDB] opacity-0 pointer-events-none;
+}
+
+.ProseMirror table .column-resize-handle:hover {
+  @apply opacity-100;
+}
