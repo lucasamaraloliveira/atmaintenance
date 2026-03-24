@@ -30,7 +30,8 @@ import {
   Undo,
   Redo,
   Plus,
-  Trash2
+  Trash2,
+  Printer
 } from 'lucide-react';
 
 interface Instruction {
@@ -173,6 +174,15 @@ export default function Editor({
               <Eye size={14} /> Visualizar
             </button>
           </div>
+          
+          {mode === 'preview' && (
+            <button
+              onClick={() => window.print()}
+              className="apple-button-secondary flex items-center gap-2"
+            >
+              <Printer size={18} /> Imprimir
+            </button>
+          )}
           
           <button
             onClick={handleSave}
