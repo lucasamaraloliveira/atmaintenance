@@ -185,11 +185,11 @@ export default function Editor({
 
       {/* Toolbar */}
       {mode === 'edit' && editor && (
-        <div className={`px-4 py-2 border-b border-[#D2D2D7] bg-[#F5F5F7] flex flex-wrap items-center gap-1 sticky top-[73px] z-10 transition-all ${
+        <div className={`px-4 py-1.5 border-b border-[#D2D2D7] bg-white/50 backdrop-blur-xl flex flex-wrap items-center gap-2 sticky top-[73px] z-10 transition-all ${
           isSidebarCollapsed ? 'pl-16' : 'pl-4'
         }`}>
           {/* Text Formatting */}
-          <div className="flex items-center bg-white border border-[#D2D2D7] rounded-md overflow-hidden">
+          <div className="flex items-center bg-[#E8E8ED]/50 p-1 rounded-lg">
             <ToolbarButton 
               active={editor.isActive('bold')} 
               onClick={() => editor.chain().focus().toggleBold().run()} 
@@ -214,20 +214,20 @@ export default function Editor({
 
           {/* Font Family */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-[#D2D2D7] rounded-md text-xs font-medium hover:bg-[#F5F5F7]">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E8E8ED]/50 rounded-lg text-xs font-semibold text-[#424245] hover:bg-[#E8E8ED] hover:text-[#1D1D1F] transition-all border border-transparent hover:border-[#D2D2D7]">
               <Type size={14} />
               <span className="max-w-[80px] truncate">
                 {fontFamilies.find(f => editor.isActive('textStyle', { fontFamily: f.value }))?.label || 'Fonte'}
               </span>
-              <ChevronDown size={12} />
+              <ChevronDown size={12} className="opacity-50" />
             </button>
-            <div className="absolute top-full left-0 mt-1 bg-white border border-[#D2D2D7] rounded-md shadow-lg hidden group-hover:block z-20 min-w-[120px]">
+            <div className="absolute top-full left-0 mt-2 bg-white/90 backdrop-blur-xl border border-[#D2D2D7] rounded-xl shadow-2xl hidden group-hover:block z-20 min-w-[140px] p-1 scale-in-center">
               {fontFamilies.map(f => (
                 <button
                   key={f.value}
                   onClick={() => editor.chain().focus().setFontFamily(f.value).run()}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-[#E8E8ED] ${
-                    editor.isActive('textStyle', { fontFamily: f.value }) ? 'bg-[#E8E8ED] font-bold' : ''
+                  className={`w-full text-left px-3 py-2 text-xs rounded-md transition-all hover:bg-[#E8E8ED] ${
+                    editor.isActive('textStyle', { fontFamily: f.value }) ? 'bg-[#009BDB] text-white' : 'text-[#424245]'
                   }`}
                   style={{ fontFamily: f.value }}
                 >
@@ -239,26 +239,27 @@ export default function Editor({
 
           {/* Font Size */}
           <div className="relative group">
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-[#D2D2D7] rounded-md text-xs font-medium hover:bg-[#F5F5F7]">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E8E8ED]/50 rounded-lg text-xs font-semibold text-[#424245] hover:bg-[#E8E8ED] hover:text-[#1D1D1F] transition-all border border-transparent hover:border-[#D2D2D7]">
               <SizeIcon size={14} />
               <span>{editor.getAttributes('textStyle').fontSize || '16px'}</span>
-              <ChevronDown size={12} />
+              <ChevronDown size={12} className="opacity-50" />
             </button>
-            <div className="absolute top-full left-0 mt-1 bg-white border border-[#D2D2D7] rounded-md shadow-lg hidden group-hover:block z-20 min-w-[80px]">
+            <div className="absolute top-full left-0 mt-2 bg-white/90 backdrop-blur-xl border border-[#D2D2D7] rounded-xl shadow-2xl hidden group-hover:block z-20 min-w-[100px] p-1 scale-in-center">
               {fontSizes.map(s => (
                 <button
                   key={s.value}
                   onClick={() => editor.chain().focus().setFontSize(s.value).run()}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-[#E8E8ED] ${
-                    editor.getAttributes('textStyle').fontSize === s.value ? 'bg-[#E8E8ED] font-bold' : ''
+                  className={`w-full text-left px-3 py-2 text-xs rounded-md transition-all hover:bg-[#E8E8ED] ${
+                    editor.getAttributes('textStyle').fontSize === s.value ? 'bg-[#009BDB] text-white' : 'text-[#424245]'
                   }`}
                 >
                   {s.label}
                 </button>
               ))}
+              <div className="h-px bg-[#D2D2D7] my-1 mx-2" />
               <button
                 onClick={() => editor.chain().focus().unsetFontSize().run()}
-                className="w-full text-left px-3 py-2 text-xs hover:bg-[#E8E8ED] border-t border-[#D2D2D7] italic"
+                className="w-full text-left px-3 py-2 text-xs rounded-md text-[#FF3B30] hover:bg-[#FF3B30]/10 italic"
               >
                 Resetar
               </button>
@@ -268,7 +269,8 @@ export default function Editor({
           <div className="w-px h-6 bg-[#D2D2D7] mx-1" />
 
           {/* Lists & Bloquote */}
-          <div className="flex items-center bg-white border border-[#D2D2D7] rounded-md overflow-hidden">
+          {/* Lists & Bloquote */}
+          <div className="flex items-center bg-[#E8E8ED]/50 p-1 rounded-lg">
             <ToolbarButton 
               active={editor.isActive('bulletList')} 
               onClick={() => editor.chain().focus().toggleBulletList().run()} 
@@ -295,16 +297,18 @@ export default function Editor({
           <div className="relative">
             <button 
               onClick={() => setShowTableMenu(!showTableMenu)}
-              className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium transition-all ${
-                showTableMenu || editor.isActive('table') ? 'bg-[#009BDB] text-white' : 'bg-white border border-[#D2D2D7] hover:bg-[#F5F5F7]'
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                showTableMenu || editor.isActive('table') 
+                  ? 'bg-[#009BDB] text-white border-transparent shadow-sm' 
+                  : 'bg-[#E8E8ED]/50 text-[#424245] border-transparent hover:bg-[#E8E8ED] hover:text-[#1D1D1F] hover:border-[#D2D2D7]'
               }`}
             >
               <TableIcon size={16} />
               <span>Tabela</span>
-              <ChevronDown size={12} />
+              <ChevronDown size={12} className="opacity-50" />
             </button>
             {showTableMenu && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-[#D2D2D7] rounded-md shadow-lg z-20 p-2 min-w-[200px]">
+              <div className="absolute top-full left-0 mt-2 bg-white/90 backdrop-blur-xl border border-[#D2D2D7] rounded-xl shadow-2xl z-20 p-3 min-w-[240px] scale-in-center">
                 <div className="grid grid-cols-1 gap-1">
                   <p className="text-[10px] text-[#86868B] mb-1 font-bold uppercase tracking-wider">Inserir Grade</p>
                   <div className="grid grid-cols-5 gap-1 mb-2">
@@ -343,7 +347,7 @@ export default function Editor({
           <div className="flex-1" />
 
           {/* History */}
-          <div className="flex items-center bg-white border border-[#D2D2D7] rounded-md overflow-hidden">
+          <div className="flex items-center bg-[#E8E8ED]/50 p-1 rounded-lg">
             <ToolbarButton 
               onClick={() => editor.chain().focus().undo().run()} 
               disabled={!editor.can().undo()}
@@ -388,11 +392,11 @@ function ToolbarButton({
       onClick={onClick}
       disabled={disabled}
       title={title}
-      className={`p-2 transition-all ${
+      className={`p-2 min-w-[36px] min-h-[36px] flex items-center justify-center transition-all rounded-md ${
         active 
-          ? 'bg-[#009BDB] text-white' 
-          : 'hover:bg-[#E8E8ED] text-[#1D1D1F]'
-      } disabled:opacity-30`}
+          ? 'bg-[#009BDB] text-white shadow-sm' 
+          : 'hover:bg-[#E8E8ED] text-[#424245] hover:text-[#1D1D1F]'
+      } disabled:opacity-20 disabled:pointer-events-none active:scale-90`}
     >
       {icon}
     </button>
