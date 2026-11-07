@@ -1,13 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   body {
     @apply bg-[#F5F5F7] text-[#1D1D1F] antialiased transition-colors duration-300;
   }
   
-  .dark body {
-    @apply bg-[#1D1D1F] text-[#F5F5F7];
+  .dark body,
+  html.dark body {
+    @apply bg-[#141416] text-[#F5F5F7];
   }
 }
 
@@ -16,8 +18,9 @@
     @apply bg-white/70 backdrop-blur-xl border-white/20;
   }
   
-  .dark .apple-glass {
-    @apply bg-[#2C2C2E]/70 border-white/10;
+  .dark .apple-glass,
+  html.dark .apple-glass {
+    @apply bg-[#1F1F22]/70 border-white/10;
   }
   
   .apple-button {
@@ -28,24 +31,27 @@
     @apply px-4 py-2 rounded-full bg-[#E8E8ED] text-[#1D1D1F] font-medium transition-all hover:bg-[#D2D2D7] active:scale-95;
   }
   
-  .dark .apple-button-secondary {
-    @apply bg-[#3A3A3C] text-[#F5F5F7] hover:bg-[#48484A];
+  .dark .apple-button-secondary,
+  html.dark .apple-button-secondary {
+    @apply bg-[#2C2C2E] text-[#F5F5F7] hover:bg-[#3A3A3C];
   }
 
   .apple-input {
     @apply w-full px-4 py-3 rounded-xl bg-white border border-[#D2D2D7] focus:border-[#009BDB] focus:ring-1 focus:ring-[#009BDB] outline-none transition-all;
   }
   
-  .dark .apple-input {
-    @apply bg-[#2C2C2E] border-[#48484A] text-[#F5F5F7] focus:border-[#009BDB] focus:ring-[#009BDB];
+  .dark .apple-input,
+  html.dark .apple-input {
+    @apply bg-[#202023] border-[#38383A] text-[#F5F5F7] focus:border-[#009BDB] focus:ring-[#009BDB];
   }
 
   .sidebar-item {
     @apply px-4 py-3 rounded-lg cursor-pointer transition-all hover:bg-[#E8E8ED];
   }
   
-  .dark .sidebar-item {
-    @apply hover:bg-[#3A3A3C];
+  .dark .sidebar-item,
+  html.dark .sidebar-item {
+    @apply hover:bg-[#252528];
   }
 
   .sidebar-item-active {
@@ -67,7 +73,8 @@
   border-radius: 10px;
 }
 
-.dark ::-webkit-scrollbar-thumb {
+.dark ::-webkit-scrollbar-thumb,
+html.dark ::-webkit-scrollbar-thumb {
   background: #48484A;
 }
 
@@ -75,7 +82,8 @@
   background: #86868B;
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
+.dark ::-webkit-scrollbar-thumb:hover,
+html.dark ::-webkit-scrollbar-thumb:hover {
   background: #636366;
 }
 
@@ -83,27 +91,29 @@
 .markdown-body h1 { @apply text-3xl font-bold mb-4 mt-6 text-[#1D1D1F]; }
 .markdown-body h2 { @apply text-2xl font-semibold mb-3 mt-5 text-[#1D1D1F]; }
 .markdown-body h3 { @apply text-xl font-medium mb-2 mt-4 text-[#1D1D1F]; }
-.dark .markdown-body h1, .dark .markdown-body h2, .dark .markdown-body h3 { @apply text-[#F5F5F7]; }
+.dark .markdown-body h1, .dark .markdown-body h2, .dark .markdown-body h3,
+html.dark .markdown-body h1, html.dark .markdown-body h2, html.dark .markdown-body h3 { @apply text-[#F5F5F7]; }
 
 .markdown-body p { @apply mb-4 leading-relaxed text-[#424245]; }
-.dark .markdown-body p { @apply text-[#A1A1A6]; }
+.dark .markdown-body p, html.dark .markdown-body p { @apply text-[#C7C7CC]; }
 
 .markdown-body ul { @apply list-disc ml-6 mb-4 text-[#424245]; }
 .markdown-body ol { @apply list-decimal ml-6 mb-4 text-[#424245]; }
-.dark .markdown-body ul, .dark .markdown-body ol { @apply text-[#A1A1A6]; }
+.dark .markdown-body ul, .dark .markdown-body ol,
+html.dark .markdown-body ul, html.dark .markdown-body ol { @apply text-[#C7C7CC]; }
 
 .markdown-body code { @apply bg-[#E8E8ED] px-1.5 py-0.5 rounded font-mono text-sm text-[#1D1D1F]; }
-.dark .markdown-body code { @apply bg-[#3A3A3C] text-[#F5F5F7]; }
+.dark .markdown-body code, html.dark .markdown-body code { @apply bg-[#2C2C2E] text-[#F5F5F7]; }
 
 .markdown-body pre { @apply bg-[#1D1D1F] text-white p-4 rounded-xl overflow-x-auto mb-4 font-mono text-sm; }
-.dark .markdown-body pre { @apply bg-[#000000] border border-[#3A3A3C]; }
+.dark .markdown-body pre, html.dark .markdown-body pre { @apply bg-[#101012] border border-[#2C2C2E]; }
 
 .markdown-body pre code { @apply bg-transparent p-0 text-inherit; }
 .markdown-body blockquote { @apply border-l-4 border-[#009BDB] pl-4 italic text-[#86868B] mb-4; }
-.dark .markdown-body blockquote { @apply border-[#009BDB] text-[#86868B]; }
+.dark .markdown-body blockquote, html.dark .markdown-body blockquote { @apply border-[#009BDB] text-[#8E8E93]; }
 
 .markdown-body a { @apply text-[#009BDB] hover:underline; }
-.dark .markdown-body a { @apply text-[#009BDB]; }
+.dark .markdown-body a, html.dark .markdown-body a { @apply text-[#009BDB]; }
 
 /* Tiptap styles */
 .ProseMirror {
@@ -115,14 +125,32 @@
   @apply mb-4 leading-relaxed;
 }
 
+.dark .ProseMirror,
+html.dark .ProseMirror {
+  color: #F5F5F7;
+}
+
 .ProseMirror h1 { @apply text-3xl font-bold mb-4 mt-6; }
 .ProseMirror h2 { @apply text-2xl font-semibold mb-3 mt-5; }
 .ProseMirror h3 { @apply text-xl font-medium mb-2 mt-4; }
+
+.dark .ProseMirror h1,
+.dark .ProseMirror h2,
+.dark .ProseMirror h3,
+html.dark .ProseMirror h1,
+html.dark .ProseMirror h2,
+html.dark .ProseMirror h3 {
+  color: #F5F5F7;
+}
 
 .ProseMirror ul { @apply list-disc ml-6 mb-4; }
 .ProseMirror ol { @apply list-decimal ml-6 mb-4; }
 
 .ProseMirror blockquote { @apply border-l-4 border-[#009BDB] pl-4 italic text-[#86868B] mb-4; }
+.dark .ProseMirror blockquote,
+html.dark .ProseMirror blockquote {
+  @apply text-[#8E8E93];
+}
 
 .ProseMirror table {
   border-collapse: collapse;
@@ -133,14 +161,31 @@
   @apply border border-[#D2D2D7] mb-4;
 }
 
+.dark .ProseMirror table,
+html.dark .ProseMirror table {
+  @apply border-[#38383A];
+}
+
 .ProseMirror table td,
 .ProseMirror table th {
   min-width: 1em;
   @apply border border-[#D2D2D7] p-2 relative text-left;
 }
 
+.dark .ProseMirror table td,
+.dark .ProseMirror table th,
+html.dark .ProseMirror table td,
+html.dark .ProseMirror table th {
+  @apply border-[#38383A];
+}
+
 .ProseMirror table th {
   @apply bg-[#F5F5F7] font-bold;
+}
+
+.dark .ProseMirror table th,
+html.dark .ProseMirror table th {
+  @apply bg-[#232326] text-[#F5F5F7];
 }
 
 .ProseMirror table .selectedCell:after {
@@ -172,35 +217,122 @@
   animation: scale-in-center 0.15s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
-/* Print Styles */
+/* ==========================================================================
+   CHECKLISTS INTERATIVOS (Tiptap Task Lists)
+   ========================================================================== */
+ul[data-type="taskList"],
+.ProseMirror ul[data-type="taskList"],
+.markdown-body ul[data-type="taskList"] {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 0.75rem 0 1.25rem 0 !important;
+}
+
+li[data-type="taskItem"],
+.ProseMirror li[data-type="taskItem"],
+.markdown-body li[data-type="taskItem"] {
+  display: flex !important;
+  align-items: flex-start !important;
+  margin-bottom: 0.45rem !important;
+  line-height: 1.55 !important;
+}
+
+li[data-type="taskItem"] > label,
+.ProseMirror li[data-type="taskItem"] > label {
+  flex: 0 0 auto !important;
+  margin-right: 0.65rem !important;
+  user-select: none !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-top: 0.15rem !important;
+}
+
+li[data-type="taskItem"] > label input[type="checkbox"],
+.ProseMirror li[data-type="taskItem"] > label input[type="checkbox"] {
+  cursor: pointer !important;
+  width: 1.15rem !important;
+  height: 1.15rem !important;
+  border-radius: 4px !important;
+  accent-color: #009BDB !important;
+  border: 1.5px solid #A1A1A6 !important;
+  transition: all 0.15s ease !important;
+}
+
+li[data-type="taskItem"] > div,
+.ProseMirror li[data-type="taskItem"] > div {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+li[data-type="taskItem"] > div > p,
+.ProseMirror li[data-type="taskItem"] > div > p {
+  margin: 0 !important;
+}
+
+li[data-type="taskItem"][data-checked="true"] > div,
+.ProseMirror li[data-type="taskItem"][data-checked="true"] > div {
+  text-decoration: line-through !important;
+  opacity: 0.6 !important;
+}
+
+/* Visibilidade da Impressão em Tela */
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS DE IMPRESSÃO A4 PROFISSIONAL
+   (Força Tema Claro / Papel Limpo mesmo com Dark Mode ativo na tela)
+   ========================================================================== */
 @media print {
   @page {
-    margin: 15mm 20mm;
-    size: auto;
+    size: A4 portrait;
+    margin: 18mm 16mm 18mm 16mm;
   }
 
-  /* Hide UI elements and ensure the printed content starts from the top */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Ocultar elementos de interface de tela, barra lateral e fotos de perfil */
+  .no-print,
+  .no-print *,
   header, 
   aside, 
   nav, 
-  .no-print,
   button,
-  .border-b,
-  .shadow-sm,
+  input,
+  img:not(.printable-content img),
+  .sticky,
   .backdrop-blur-md,
   .backdrop-blur-xl,
-  .sticky {
+  [role="dialog"] {
     display: none !important;
     height: 0 !important;
+    width: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
+    visibility: hidden !important;
     position: absolute !important;
     top: -9999px !important;
-    visibility: hidden !important;
+    left: -9999px !important;
+    opacity: 0 !important;
   }
 
-  /* CRITICAL: Reset all containers that might cause clipping */
-  html, body, #__next, div[class*="overflow-hidden"], main {
+  /* Resetar conteineres para fluxo natural de impressão contínua em folha branca */
+  html, 
+  html.dark,
+  body, 
+  html.dark body, 
+  #__next, 
+  div[class*="overflow-hidden"], 
+  main, 
+  html.dark main,
+  .printable-content,
+  html.dark .printable-content {
     height: auto !important;
     min-height: auto !important;
     max-height: none !important;
@@ -209,24 +341,29 @@
     overflow-y: visible !important;
     position: static !important;
     display: block !important;
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
   }
 
   body {
-    background: white !important;
-    color: black !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 10.5pt !important;
+    line-height: 1.55 !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* Content alignment */
   main {
     padding: 0 !important;
     margin: 0 !important;
   }
 
   .flex-1 {
-    display: block !important; /* Switch from flex to block for printing */
+    display: block !important;
     overflow: visible !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -237,69 +374,273 @@
   .max-w-4xl {
     max-width: 100% !important;
     padding: 0 !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     border: none !important;
   }
 
-  .ProseMirror, .markdown-body {
-    padding: 40px 0 !important; /* Some breathing room at top/bottom of content */
+  /* Força a tipografia limpa no modo de impressão (mesmo com Tailwind dark:prose-invert) */
+  .prose,
+  .prose.dark\:prose-invert,
+  .dark .prose,
+  .dark .prose-invert {
+    --tw-prose-body: #374151 !important;
+    --tw-prose-headings: #111827 !important;
+    --tw-prose-lead: #4b5563 !important;
+    --tw-prose-links: #0077ED !important;
+    --tw-prose-bold: #111827 !important;
+    --tw-prose-counters: #6b7280 !important;
+    --tw-prose-bullets: #9ca3af !important;
+    --tw-prose-hr: #e5e7eb !important;
+    --tw-prose-quotes: #475569 !important;
+    --tw-prose-quote-borders: #009BDB !important;
+    --tw-prose-captions: #6b7280 !important;
+    --tw-prose-code: #0f172a !important;
+    --tw-prose-pre-code: #0f172a !important;
+    --tw-prose-pre-bg: #f8fafc !important;
+    --tw-prose-th-borders: #d1d5db !important;
+    --tw-prose-td-borders: #e5e7eb !important;
+    color: #374151 !important;
+  }
+
+  .ProseMirror, 
+  .dark .ProseMirror,
+  html.dark .ProseMirror,
+  .markdown-body {
+    padding: 0 !important;
     margin: 0 !important;
     min-height: auto !important;
     width: 100% !important;
     display: block !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #1F2937 !important;
   }
 
-  /* Grid alignment for high quality */
-  h1 { 
-    font-size: 28pt !important; 
-    margin-top: 0 !important;
-    margin-bottom: 30pt !important; 
-    border-bottom: 2pt solid black !important; 
-    padding-bottom: 10pt;
-    text-align: center !important;
+  /* Títulos em A4 elegantes e proporcionais */
+  .ProseMirror h1, 
+  .dark .ProseMirror h1,
+  html.dark .ProseMirror h1,
+  .markdown-body h1 { 
+    font-size: 18pt !important; 
+    font-weight: 700 !important;
+    margin-top: 14pt !important; 
+    margin-bottom: 8pt !important; 
+    color: #111827 !important;
     page-break-after: avoid;
+    break-after: avoid;
+    border: none !important;
+    padding: 0 !important;
+    text-align: left !important;
   }
   
-  h2 { font-size: 20pt !important; margin-top: 30pt !important; margin-bottom: 15pt !important; page-break-after: avoid; }
-  h3 { font-size: 16pt !important; margin-top: 25pt !important; margin-bottom: 12pt !important; page-break-after: avoid; }
-
-  p, li, blockquote {
-    font-size: 11pt !important;
-    line-height: 1.6 !important;
-    color: #000 !important;
-    text-align: justify !important;
-    orphans: 3;
-    widows: 3;
+  .ProseMirror h2, 
+  .dark .ProseMirror h2,
+  html.dark .ProseMirror h2,
+  .markdown-body h2 { 
+    font-size: 14pt !important; 
+    font-weight: 600 !important;
+    margin-top: 12pt !important; 
+    margin-bottom: 6pt !important; 
+    color: #1F2937 !important;
+    page-break-after: avoid;
+    break-after: avoid;
+    border-bottom: 1px solid #E5E7EB !important;
+    padding-bottom: 3pt !important;
   }
 
-  table {
-    page-break-inside: auto !important;
-    border-collapse: collapse !important;
-    border: 1pt solid black !important;
-    width: 100% !important;
-    margin-bottom: 20pt !important;
-    table-layout: auto !important;
+  .ProseMirror h3, 
+  .dark .ProseMirror h3,
+  html.dark .ProseMirror h3,
+  .markdown-body h3 { 
+    font-size: 12pt !important; 
+    font-weight: 600 !important;
+    margin-top: 10pt !important; 
+    margin-bottom: 4pt !important; 
+    color: #374151 !important;
+    page-break-after: avoid;
+    break-after: avoid;
   }
 
-  thead { display: table-header-group !important; }
-  tr { page-break-inside: avoid !important; }
+  p, 
+  li,
+  .dark .ProseMirror p,
+  html.dark .ProseMirror p,
+  .dark .ProseMirror li,
+  html.dark .ProseMirror li {
+    font-size: 10.5pt !important;
+    line-height: 1.55 !important;
+    color: #374151 !important;
+    margin-bottom: 6pt !important;
+  }
 
-  th, td {
-    border: 1pt solid #000 !important;
-    padding: 8pt !important;
+  /* Citações / Avisos Técnicos */
+  blockquote, 
+  .ProseMirror blockquote,
+  .dark .ProseMirror blockquote,
+  html.dark .ProseMirror blockquote {
+    border-left: 3pt solid #009BDB !important;
+    background-color: #F8FAFC !important;
+    padding: 6pt 10pt !important;
+    margin: 8pt 0 !important;
+    font-style: italic !important;
+    color: #475569 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Blocos de Código em Impressão */
+  pre, 
+  .ProseMirror pre,
+  .dark .ProseMirror pre,
+  html.dark .ProseMirror pre,
+  .dark pre,
+  html.dark pre {
+    background-color: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    border-radius: 4pt !important;
+    padding: 8pt 10pt !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+    color: #0F172A !important;
+    margin: 8pt 0 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    white-space: pre-wrap !important;
     word-break: break-word !important;
   }
 
-  th {
-    background-color: #eee !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    font-weight: bold;
+  code, 
+  .ProseMirror code,
+  .dark .ProseMirror code,
+  html.dark .ProseMirror code,
+  .dark code,
+  html.dark code {
+    background-color: #F1F5F9 !important;
+    border: 1px solid #E2E8F0 !important;
+    padding: 1pt 3pt !important;
+    border-radius: 2pt !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 9pt !important;
+    color: #0F172A !important;
   }
 
-  a[href]:after {
-    content: " [" attr(href) "]";
-    font-size: 9pt;
-    color: #333;
+  pre code,
+  .dark pre code,
+  html.dark pre code {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Tabelas Técnicas Formatadas para A4 */
+  table, 
+  .ProseMirror table,
+  .dark .ProseMirror table,
+  html.dark .ProseMirror table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 10pt 0 14pt 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: 1px solid #D1D5DB !important;
+    background-color: #FFFFFF !important;
+  }
+
+  thead { 
+    display: table-header-group !important; 
+  }
+  
+  tr { 
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  th, 
+  td, 
+  .ProseMirror table th, 
+  .ProseMirror table td,
+  .dark .ProseMirror table th, 
+  .dark .ProseMirror table td,
+  html.dark .ProseMirror table th, 
+  html.dark .ProseMirror table td {
+    border: 1px solid #D1D5DB !important;
+    padding: 6pt 8pt !important;
+    font-size: 9.5pt !important;
+    text-align: left !important;
+    word-break: break-word !important;
+    color: #374151 !important;
+  }
+
+  th, 
+  .ProseMirror table th,
+  .dark .ProseMirror table th,
+  html.dark .ProseMirror table th {
+    background-color: #F3F4F6 !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Checklists em Impressão A4 */
+  ul[data-type="taskList"],
+  .ProseMirror ul[data-type="taskList"],
+  .markdown-body ul[data-type="taskList"] {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin: 6pt 0 10pt 0 !important;
+  }
+
+  li[data-type="taskItem"],
+  .ProseMirror li[data-type="taskItem"],
+  .markdown-body li[data-type="taskItem"] {
+    display: flex !important;
+    align-items: flex-start !important;
+    margin-bottom: 4pt !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  li[data-type="taskItem"] > label,
+  .ProseMirror li[data-type="taskItem"] > label {
+    margin-right: 6pt !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  li[data-type="taskItem"] > label input[type="checkbox"],
+  .ProseMirror li[data-type="taskItem"] > label input[type="checkbox"] {
+    width: 10.5pt !important;
+    height: 10.5pt !important;
+    border: 1.5pt solid #374151 !important;
+    accent-color: #009BDB !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  li[data-type="taskItem"][data-checked="true"] > div,
+  .ProseMirror li[data-type="taskItem"][data-checked="true"] > div {
+    text-decoration: line-through !important;
+    color: #6B7280 !important;
+  }
+
+  /* Listas comuns (não-checklist) */
+  ul:not([data-type="taskList"]) {
+    list-style-type: disc !important;
+    padding-left: 18pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  ol {
+    list-style-type: decimal !important;
+    padding-left: 18pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  /* Links limpos */
+  a {
+    color: #0077ED !important;
+    text-decoration: underline !important;
   }
 }

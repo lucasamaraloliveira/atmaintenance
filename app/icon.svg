@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient (Apple Tech Blue) -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00B4D8" />
+      <stop offset="50%" stop-color="#0096C7" />
+      <stop offset="100%" stop-color="#0077B6" />
+    </linearGradient>
+    
+    <!-- Gloss shine -->
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Drop Shadow for inner document -->
+    <filter id="docShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#003554" flood-opacity="0.3" />
+    </filter>
+
+    <!-- Tool Badge Shadow -->
+    <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#001824" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- iOS-style Squircle Base -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)" />
+
+  <!-- Subtle Top Edge Glass Shine -->
+  <rect width="512" height="240" rx="115" fill="url(#glossGrad)" />
+
+  <!-- Inner Document Card -->
+  <g filter="url(#docShadow)">
+    <rect x="106" y="96" width="300" height="320" rx="36" fill="#FFFFFF" fill-opacity="0.96" />
+    
+    <!-- Browser/Doc Window Dots -->
+    <circle cx="152" cy="140" r="9" fill="#FF5F56" />
+    <circle cx="180" cy="140" r="9" fill="#FFBD2E" />
+    <circle cx="208" cy="140" r="9" fill="#27C93F" />
+
+    <!-- Site Header Line -->
+    <rect x="146" y="180" width="150" height="14" rx="7" fill="#0096C7" />
+    
+    <!-- Content Lines -->
+    <rect x="146" y="214" width="220" height="10" rx="5" fill="#D2D2D7" />
+    <rect x="146" y="238" width="180" height="10" rx="5" fill="#E8E8ED" />
+    <rect x="146" y="262" width="130" height="10" rx="5" fill="#E8E8ED" />
+
+    <!-- Maintenance Tool Badge (Wrench & Screwdriver) -->
+    <g filter="url(#badgeShadow)">
+      <circle cx="330" cy="336" r="62" fill="#0077B6" />
+      <circle cx="330" cy="336" r="56" fill="#0096C7" />
+      
+      <!-- Wrench SVG Path -->
+      <path d="M346.5 319.5c-4.2-4.2-10.8-4.6-15.4-1l-7.6-7.6a12.8 12.8 0 0 1 0-18.1 12.8 12.8 0 0 1 18.1 0l7.6 7.6c4.6-3.6 5.2-10.2 1-15.4-5.1-5.1-13-5.8-18.7-2.2l-11.2-11.2a24.5 24.5 0 0 0-34.6 34.6l11.2 11.2c-3.6 5.7-2.9 13.6 2.2 18.7 4.2 4.2 10.8 4.6 15.4 1l7.6 7.6c5.1 5.1 13.1 5.1 18.1 0 5.1-5.1 5.1-13.1 0-18.1l-7.6-7.6c4.6-3.6 5.2-10.2 1-15.4l15.9-15.9z" fill="#FFFFFF" transform="translate(18, 20) scale(0.9)" />
+      
+      <!-- Center gear/tool accent dot -->
+      <circle cx="330" cy="336" r="8" fill="#FFFFFF" fill-opacity="0.9" />
+    </g>
+  </g>
+</svg>
