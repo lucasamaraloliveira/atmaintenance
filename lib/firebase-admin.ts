@@ -1,7 +1,6 @@
 import { initializeApp, getApps, getApp, cert, App } from 'firebase-admin/app';
 import { getAuth, Auth } from 'firebase-admin/auth';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
-import clientConfig from '@/firebase-applet-config.json';
 
 function formatPrivateKey(key?: string): string | undefined {
   if (!key) return undefined;
@@ -13,7 +12,7 @@ function initializeFirebaseAdmin(): App {
     return getApp();
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || clientConfig.projectId;
+  const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'atmaintenance';
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const privateKey = formatPrivateKey(process.env.FIREBASE_PRIVATE_KEY);
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
@@ -50,7 +49,7 @@ function initializeFirebaseAdmin(): App {
 const adminApp = initializeFirebaseAdmin();
 export const adminAuth: Auth = getAuth(adminApp);
 
-const databaseId = process.env.FIREBASE_DATABASE_ID || process.env.NEXT_PUBLIC_FIREBASE_DATABASE_ID || clientConfig.firestoreDatabaseId;
+const databaseId = process.env.FIREBASE_DATABASE_ID || process.env.NEXT_PUBLIC_FIREBASE_DATABASE_ID;
 export const adminDb: Firestore = databaseId && databaseId !== '(default)'
   ? getFirestore(adminApp, databaseId)
   : getFirestore(adminApp);
