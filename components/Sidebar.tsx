@@ -1,12 +1,13 @@
 'use client';
 
-import { Plus, Search, FileText, Trash2, PanelLeftClose, Loader2 } from 'lucide-react';
+import { Plus, Search, FileText, Trash2, PanelLeftClose, Loader2, Pin, Copy } from 'lucide-react';
 import { useState } from 'react';
 
-interface Instruction {
+export interface SidebarInstruction {
   id: string;
   siteName: string;
   updatedAt: any;
+  isPinned?: boolean;
 }
 
 export default function Sidebar({
@@ -15,14 +16,18 @@ export default function Sidebar({
   onSelect,
   onNew,
   onDelete,
+  onDuplicate,
+  onTogglePin,
   onClose,
   isCreating = false,
 }: {
-  instructions: Instruction[];
+  instructions: SidebarInstruction[];
   selectedId: string | null;
   onSelect: (id: string) => void;
   onNew: () => void;
   onDelete: (id: string) => void;
+  onDuplicate: (id: string) => void;
+  onTogglePin: (id: string) => void;
   onClose: () => void;
   isCreating?: boolean;
 }) {
@@ -31,6 +36,107 @@ export default function Sidebar({
   const filtered = instructions.filter((i) =>
     i.siteName.toLowerCase().includes(search.toLowerCase())
   );
+
+  const pinnedItems = filtered.filter((i) => i.isPinned);
+  const otherItems = filtered.filter((i) => !i.isPinned);
+
+  const renderItem = (item: SidebarInstruction) => {
+    const isSelected = selectedId === item.id;
+
+    return (
+      <div
+        key={item.id}
+        onClick={() => onSelect(item.id)}
+        className={`group flex items-center gap-2.5 p-2.5 rounded-xl cursor-pointer transition-all ${
+          isSelected
+            ? 'bg-[#009BDB] text-white shadow-xs'
+            : 'hover:bg-[#E8E8ED] dark:hover:bg-[#222225] text-[#1D1D1F] dark:text-[#F5F5F7]'
+        }`}
+      >
+        <FileText
+          size={17}
+          className={`shrink-0 ${
+            isSelected ? 'text-white' : item.isPinned ? 'text-[#009BDB]' : 'text-[#86868B] dark:text-[#8E8E93]'
+          }`}
+        />
+
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate flex items-center gap-1.5">
+            <span>{item.siteName}</span>
+          </p>
+          <p
+            className={`text-[10px] ${
+              isSelected ? 'text-white/75' : 'text-[#86868B] dark:text-[#8E8E93]'
+            }`}
+          >
+            {item.updatedAt?.toDate
+              ? item.updatedAt.toDate().toLocaleDateString('pt-BR')
+              : item.updatedAt instanceof Date
+              ? item.updatedAt.toLocaleDateString('pt-BR')
+              : 'Hoje'}
+          </p>
+        </div>
+
+        {/* Ações do Item */}
+        <div className="flex items-center gap-0.5 shrink-0">
+          {/* Botão Fixar / Desafixar */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onTogglePin(item.id);
+            }}
+            className={`p-1.5 rounded-lg transition-all ${
+              item.isPinned
+                ? isSelected
+                  ? 'text-amber-200 hover:bg-white/20'
+                  : 'text-amber-500 hover:bg-amber-500/10'
+                : isSelected
+                ? 'opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:bg-white/20 text-white'
+                : 'opacity-80 md:opacity-0 md:group-hover:opacity-100 hover:bg-[#D2D2D7] dark:hover:bg-[#3A3A3C] text-[#86868B] dark:text-[#8E8E93] hover:text-[#009BDB]'
+            }`}
+            title={item.isPinned ? 'Desafixar do topo' : 'Fixar no topo'}
+          >
+            <Pin size={13} className={item.isPinned ? 'rotate-45 fill-current' : 'rotate-45'} />
+          </button>
+
+          {/* Botão Duplicar */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDuplicate(item.id);
+            }}
+            className={`p-1.5 rounded-lg opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-all ${
+              isSelected
+                ? 'hover:bg-white/20 text-white'
+                : 'hover:bg-[#D2D2D7] dark:hover:bg-[#3A3A3C] text-[#86868B] dark:text-[#8E8E93] hover:text-[#009BDB]'
+            }`}
+            title="Duplicar instrução (Clonar)"
+          >
+            <Copy size={13} />
+          </button>
+
+          {/* Botão Excluir */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(item.id);
+            }}
+            className={`p-1.5 rounded-lg opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-all ${
+              isSelected
+                ? 'hover:bg-white/20 text-white'
+                : 'hover:bg-[#D2D2D7] dark:hover:bg-[#3A3A3C] text-[#FF3B30]'
+            }`}
+            title="Excluir"
+          >
+            <Trash2 size={13} />
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="no-print w-80 h-full flex flex-col bg-[#F5F5F7]/80 dark:bg-[#18181B]/90 backdrop-blur-xl transition-colors duration-300">
@@ -45,21 +151,26 @@ export default function Sidebar({
             >
               <PanelLeftClose size={18} />
             </button>
-            <h1 className="text-xl font-bold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">ATMaintenance</h1>
+            <h1 className="text-xl font-bold tracking-tight text-[#1D1D1F] dark:text-[#F5F5F7]">
+              ATMaintenance
+            </h1>
           </div>
           <button
             type="button"
             onClick={onNew}
             disabled={isCreating}
             className="p-2 rounded-full bg-white dark:bg-[#2C2C2E] border border-[#D2D2D7] dark:border-[#38383A] text-[#009BDB] hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all shadow-xs disabled:opacity-50 active:scale-95"
-            title="Nova Instrução"
+            title="Nova Instrução (Ctrl+N)"
           >
             {isCreating ? <Loader2 size={20} className="animate-spin text-[#009BDB]" /> : <Plus size={20} />}
           </button>
         </div>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#86868B] dark:text-[#8E8E93]" size={16} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#86868B] dark:text-[#8E8E93]"
+            size={16}
+          />
           <input
             id="sidebar-search-input"
             type="text"
@@ -80,45 +191,27 @@ export default function Sidebar({
             Nenhuma instrução encontrada.
           </div>
         ) : (
-          <div className="space-y-1">
-            {filtered.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => onSelect(item.id)}
-                className={`group flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
-                  selectedId === item.id
-                    ? 'bg-[#009BDB] text-white shadow-xs'
-                    : 'hover:bg-[#E8E8ED] dark:hover:bg-[#222225] text-[#1D1D1F] dark:text-[#F5F5F7]'
-                }`}
-              >
-                <FileText size={18} className={selectedId === item.id ? 'text-white' : 'text-[#86868B] dark:text-[#8E8E93]'} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{item.siteName}</p>
-                  <p className={`text-[10px] ${selectedId === item.id ? 'text-white/70' : 'text-[#86868B] dark:text-[#8E8E93]'}`}>
-                    {item.updatedAt?.toDate 
-                      ? item.updatedAt.toDate().toLocaleDateString('pt-BR') 
-                      : (item.updatedAt instanceof Date 
-                          ? item.updatedAt.toLocaleDateString('pt-BR') 
-                          : 'Hoje')}
-                  </p>
+          <div className="space-y-3">
+            {/* Seção de Fixados */}
+            {pinnedItems.length > 0 && (
+              <div className="space-y-1">
+                <div className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#009BDB]">
+                  <Pin size={11} className="rotate-45 fill-current" />
+                  <span>Fixados ({pinnedItems.length})</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(item.id);
-                  }}
-                  className={`p-1.5 rounded-lg opacity-80 md:opacity-0 md:group-hover:opacity-100 transition-all ${
-                    selectedId === item.id
-                      ? 'hover:bg-white/20 text-white'
-                      : 'hover:bg-[#D2D2D7] dark:hover:bg-[#3A3A3C] text-[#FF3B30]'
-                  }`}
-                  title="Excluir"
-                >
-                  <Trash2 size={14} />
-                </button>
+                {pinnedItems.map((item) => renderItem(item))}
               </div>
-            ))}
+            )}
+
+            {/* Seção de Demais Instruções */}
+            <div className="space-y-1">
+              {pinnedItems.length > 0 && otherItems.length > 0 && (
+                <div className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#86868B] dark:text-[#8E8E93]">
+                  <span>Todos os Sites ({otherItems.length})</span>
+                </div>
+              )}
+              {otherItems.map((item) => renderItem(item))}
+            </div>
           </div>
         )}
       </div>
