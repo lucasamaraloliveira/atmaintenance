@@ -12,6 +12,7 @@ import { TableHeader } from '@tiptap/extension-table-header';
 import { TableCell } from '@tiptap/extension-table-cell';
 import { TaskList } from '@tiptap/extension-task-list';
 import { TaskItem } from '@tiptap/extension-task-item';
+import TipTapImage from '@tiptap/extension-image';
 import { FontSize } from '@/lib/tiptap-extensions';
 import { marked } from 'marked';
 import { downloadMarkdownFile, htmlToMarkdown, markdownToHtml } from '@/lib/markdown';
@@ -28,6 +29,7 @@ import {
   Type,
   Type as SizeIcon,
   Table as TableIcon,
+  Image as ImageIcon,
   ChevronDown,
   List,
   ListOrdered,
@@ -85,6 +87,36 @@ export default function Editor({
   );
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const autosaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSavedContentRef = useRef<string>('');
+
+  const triggerAutosave = (currentContent: string, currentSiteName: string) => {
+    if (mode !== 'edit' || !instruction) return;
+    const serialized = JSON.stringify({ siteName: currentSiteName.trim(), content: currentContent });
+    if (serialized === lastSavedContentRef.current) return;
+
+    if (autosaveTimerRef.current) {
+      clearTimeout(autosaveTimerRef.current);
+    }
+
+    autosaveTimerRef.current = setTimeout(async () => {
+      try {
+        setSaveStatus('saving');
+        await onSave({
+          siteName: currentSiteName,
+          content: currentContent,
+        });
+        lastSavedContentRef.current = serialized;
+        setSaveStatus('saved');
+        setTimeout(() => {
+          setSaveStatus((prev) => (prev === 'saved' ? 'idle' : prev));
+        }, 2000);
+      } catch (err) {
+        console.error('Erro no salvamento automático:', err);
+        setSaveStatus('idle');
+      }
+    }, 2000);
+  };
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -102,6 +134,10 @@ export default function Editor({
       TextStyle,
       FontFamily,
       FontSize,
+      TipTapImage.configure({
+        inline: false,
+        allowBase64: true,
+      }),
       Table.configure({
         resizable: true,
       }),
@@ -109,9 +145,61 @@ export default function Editor({
       TableHeader,
       TableCell,
     ],
+    editorProps: {
+      handlePaste: (view, event) => {
+        const items = Array.from(event.clipboardData?.items || []);
+        const imageItem = items.find((item) => item.type.startsWith('image/'));
+        if (!imageItem) return false;
+        const file = imageItem.getAsFile();
+        if (!file) return false;
+
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+          const base64 = readerEvent.target?.result as string;
+          if (base64) {
+            const node = view.state.schema.nodes.image.create({ src: base64 });
+            const transaction = view.state.tr.replaceSelectionWith(node);
+            view.dispatch(transaction);
+          }
+        };
+        reader.readAsDataURL(file);
+        return true;
+      },
+      handleDrop: (view, event) => {
+        const files = Array.from(event.dataTransfer?.files || []);
+        const imageFile = files.find((file) => file.type.startsWith('image/'));
+        if (!imageFile) return false;
+
+        const reader = new FileReader();
+        reader.onload = (readerEvent) => {
+          const base64 = readerEvent.target?.result as string;
+          if (base64) {
+            const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
+            const node = view.state.schema.nodes.image.create({ src: base64 });
+            const transaction = coordinates
+              ? view.state.tr.insert(coordinates.pos, node)
+              : view.state.tr.replaceSelectionWith(node);
+            view.dispatch(transaction);
+          }
+        };
+        reader.readAsDataURL(imageFile);
+        return true;
+      },
+    },
+    onUpdate: ({ editor }) => {
+      triggerAutosave(editor.getHTML(), siteName);
+    },
     content: instruction?.content || '',
     editable: mode === 'edit',
   });
+
+  useEffect(() => {
+    return () => {
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (editor && instruction) {
@@ -122,12 +210,20 @@ export default function Editor({
       }
       editor.commands.setContent(htmlContent);
       setSiteName(instruction.siteName);
+      lastSavedContentRef.current = JSON.stringify({ siteName: instruction.siteName.trim(), content: htmlContent });
       setSaveStatus('idle');
       setShowTemplatesBar(
         !htmlContent.trim() || htmlContent.includes('Descreva aqui as instruções')
       );
     }
   }, [instruction, editor]);
+
+  // Se o nome do site for editado, engatilha autosave
+  useEffect(() => {
+    if (editor && mode === 'edit' && instruction) {
+      triggerAutosave(editor.getHTML(), siteName);
+    }
+  }, [siteName]);
 
   useEffect(() => {
     if (editor) {
@@ -137,12 +233,17 @@ export default function Editor({
 
   const handleSave = async () => {
     if (!editor || saveStatus === 'saving') return;
+    if (autosaveTimerRef.current) {
+      clearTimeout(autosaveTimerRef.current);
+    }
     setSaveStatus('saving');
     try {
+      const content = editor.getHTML();
       await onSave({
         siteName,
-        content: editor.getHTML(),
+        content,
       });
+      lastSavedContentRef.current = JSON.stringify({ siteName: siteName.trim(), content });
       setSaveStatus('saved');
       setTimeout(() => {
         setSaveStatus('idle');
@@ -150,6 +251,20 @@ export default function Editor({
     } catch {
       setSaveStatus('idle');
     }
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const base64 = readerEvent.target?.result as string;
+      if (base64) {
+        editor.chain().focus().setImage({ src: base64 }).run();
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   const handleApplyTemplate = (template: MaintenanceTemplate) => {
@@ -613,6 +728,26 @@ export default function Editor({
               <Sparkles size={14} className={showTemplatesBar ? 'text-white' : 'text-[#009BDB]'} />
               <span>Modelos</span>
             </button>
+
+            <div className="w-px h-4 bg-[#D2D2D7] dark:bg-[#38383A] mx-0.5" />
+
+            {/* Inserir Imagem */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="h-8 px-2.5 flex items-center gap-1.5 rounded-md text-xs font-medium transition-all hover:bg-[#E8E8ED] dark:hover:bg-[#303034] text-[#424245] dark:text-[#C7C7CC] hover:text-[#1D1D1F] dark:hover:text-[#F5F5F7]"
+              title="Inserir imagem (ou cole com Ctrl+V)"
+            >
+              <ImageIcon size={14} />
+              <span>Imagem</span>
+            </button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImageFileChange} 
+              accept="image/*" 
+              className="hidden" 
+            />
           </div>
 
           <div className="flex-1" />

@@ -60,8 +60,11 @@ export default function Home() {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 
-      // Ordena em memória por data de atualização decrescente
+      // Ordena em memória: Fixados no topo, depois data decrescente
       docs.sort((a: any, b: any) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+
         const getTime = (item: any) => {
           if (item.updatedAt?.toMillis) return item.updatedAt.toMillis();
           if (item.updatedAt?.seconds) return item.updatedAt.seconds * 1000;
@@ -273,6 +276,70 @@ export default function Home() {
     }
   }, [lastDeleted, user]);
 
+  const handleDuplicate = useCallback(async (id: string) => {
+    if (!user) return;
+    const itemToClone = instructions.find((i) => i.id === id);
+    if (!itemToClone) return;
+
+    try {
+      const now = new Date();
+      const duplicateData = {
+        siteName: `${itemToClone.siteName || 'Site'} (Cópia)`,
+        content: itemToClone.content || '',
+        authorUid: user.uid,
+        isPinned: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      const docRef = await addDoc(collection(db, 'instructions'), duplicateData);
+
+      const optimisticDoc = {
+        id: docRef.id,
+        ...duplicateData,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      setInstructions((prev) => [optimisticDoc, ...prev]);
+      setSelectedId(docRef.id);
+    } catch (error: any) {
+      console.error('Erro ao duplicar instrução:', error);
+      alert('Erro ao duplicar instrução: ' + (error?.message || error));
+    }
+  }, [user, instructions]);
+
+  const handleTogglePin = useCallback(async (id: string) => {
+    const item = instructions.find((i) => i.id === id);
+    if (!item) return;
+    const nextPinned = !item.isPinned;
+
+    setInstructions((prev) => {
+      const updated = prev.map((i) => (i.id === id ? { ...i, isPinned: nextPinned } : i));
+      return updated.sort((a: any, b: any) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        const getTime = (it: any) => {
+          if (it.updatedAt?.toMillis) return it.updatedAt.toMillis();
+          if (it.updatedAt?.seconds) return it.updatedAt.seconds * 1000;
+          if (it.updatedAt instanceof Date) return it.updatedAt.getTime();
+          if (it.createdAt?.toMillis) return it.createdAt.toMillis();
+          if (it.createdAt?.seconds) return it.createdAt.seconds * 1000;
+          return 0;
+        };
+        return getTime(b) - getTime(a);
+      });
+    });
+
+    try {
+      await updateDoc(doc(db, 'instructions', id), {
+        isPinned: nextPinned,
+      });
+    } catch (error) {
+      console.error('Erro ao alterar fixação da instrução:', error);
+    }
+  }, [instructions]);
+
   const selectedInstruction = instructions.find((i) => i.id === selectedId) || null;
 
   const handleCloseUndo = useCallback(() => {
@@ -322,6 +389,8 @@ export default function Home() {
                 onSelect={setSelectedId}
                 onNew={handleNew}
                 onDelete={handleDelete}
+                onDuplicate={handleDuplicate}
+                onTogglePin={handleTogglePin}
                 onClose={() => setIsSidebarOpen(false)}
                 isCreating={isCreating}
               />

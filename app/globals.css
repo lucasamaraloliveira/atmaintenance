@@ -152,6 +152,26 @@ html.dark .ProseMirror blockquote {
   @apply text-[#8E8E93];
 }
 
+/* Imagens no Editor e Preview */
+.ProseMirror img,
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  border: 1px solid #D2D2D7;
+  margin: 1rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  display: block;
+}
+
+.dark .ProseMirror img,
+.dark .markdown-body img,
+html.dark .ProseMirror img,
+html.dark .markdown-body img {
+  border-color: #38383A;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .ProseMirror table {
   border-collapse: collapse;
   table-layout: fixed;
@@ -642,5 +662,19 @@ li[data-type="taskItem"][data-checked="true"] > div,
   a {
     color: #0077ED !important;
     text-decoration: underline !important;
+  }
+
+  /* Imagens limpas na Impressão */
+  img,
+  .ProseMirror img,
+  .markdown-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 4pt !important;
+    border: 1pt solid #D1D5DB !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+    margin: 8pt 0 !important;
   }
 }
